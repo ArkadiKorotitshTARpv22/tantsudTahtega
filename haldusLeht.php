@@ -77,11 +77,12 @@ function isAdmin(){
             <th>Tantsupaari nimi</th>
             <th>Punktid</th>
             <th>Kuupäev</th>
+            <th>Kommentaarid</th>
         </tr>
         <?php
         global $yhendus;
-        $kask=$yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev FROM tantsud WHERE avalik=1");
-        $kask->bind_result($id, $tantsupaar, $punktid, $paev);
+        $kask=$yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev, kommentaarid FROM tantsud WHERE avalik=1");
+        $kask->bind_result($id, $tantsupaar, $punktid, $paev, $kommentaarid);
         $kask->execute();
         while($kask->fetch()){
             echo "<tr>";
@@ -89,6 +90,7 @@ function isAdmin(){
             echo "<td>".$tantsupaar."</id>";
             echo "<td>".$punktid."</td>";
             echo "<td>".$paev."</td>";
+            echo "<td>".$kommentaarid."</td>";
             if(isAdmin()){
 
             } else {
@@ -98,6 +100,11 @@ function isAdmin(){
             echo "</tr>";
         }
         ?>
+        <form action='?'>
+            <input type='hidden' value='$id' name='komment'>
+            <input type='text' name='uuskomment' id='uuskomment'>
+            <input type='submit' value='OK'>
+        </form>
         <?php if(isAdmin()){?>
 
 
