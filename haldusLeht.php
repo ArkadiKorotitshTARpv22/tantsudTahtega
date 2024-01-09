@@ -102,7 +102,7 @@ function isAdmin(){
             echo "<td>".$tantsupaar."</id>";
             echo "<td>".$punktid."</td>";
             echo "<td>".$paev."</td>";
-            echo "<td>".$kommentaarid."</td>";
+            echo "<td>".nl2br(htmlspecialchars($kommentaarid))."</td>";
 
             if(isAdmin()){
 
