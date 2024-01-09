@@ -2,7 +2,6 @@
 require_once ("conf.php");
 session_start();
 // punktide lisamine
-
 if(isset($_REQUEST["paarinimi"]) && !empty($_REQUEST["paarinimi"]) && isAdmin()){
     global $yhendus;
     $kask=$yhendus->prepare("INSERT INTO tantsud (tantsupaar, ava_paev) VALUES(?, NOW())");
@@ -42,7 +41,21 @@ function isAdmin(){
     <title>Tantsud tahtega</title>
 </head>
 <body>
+<nav>
+    <ul>
+
+        <li>
+            <a href="haldusLeht.php">Kasutaja</a>
+        </li>
+        <?php if(isAdmin()){ ?>
+            <li>
+                <a href="adminLeht.php">Admin</a>
+            </li>
+        <?php } ?>
+    </ul>
+</nav>
 <header>
+
     <?php
     if(isset($_SESSION['kasutaja'])){
         ?>
@@ -58,38 +71,43 @@ function isAdmin(){
 </header>
 <h1>Tantsud tähtedega</h1>
 <h2>Punktide lisamine</h2>
-<table>
-    <tr>
-        <th>Tantsupaari nimi</th>
-        <th>Punktid</th>
-        <th>Kuupäev</th>
-    </tr>
-<?php
-    global $yhendus;
-    $kask=$yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev FROM tantsud WHERE avalik=1");
-$kask->bind_result($id, $tantsupaar, $punktid, $paev);
-    $kask->execute();
-    while($kask->fetch()){
-        echo "<tr>";
-        $tantsupaar=htmlspecialchars($tantsupaar);
-        echo "<td>".$tantsupaar."</id>";
-        echo "<td>".$punktid."</td>";
-        echo "<td>".$paev."</td>";
-        echo "<td><a href='?heatants=$id'>Lisa +1punkt</a></td>";
-        echo "<td><a href='?badtants=$id'>Lisa -1punkt</a></td>";
-        echo "</tr>";
-    }
-?>
-    <?php if(isAdmin()){?>
+<?php if(isset($_SESSION["kasutaja"])){?>
+    <table>
+        <tr>
+            <th>Tantsupaari nimi</th>
+            <th>Punktid</th>
+            <th>Kuupäev</th>
+        </tr>
+        <?php
+        global $yhendus;
+        $kask=$yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev FROM tantsud WHERE avalik=1");
+        $kask->bind_result($id, $tantsupaar, $punktid, $paev);
+        $kask->execute();
+        while($kask->fetch()){
+            echo "<tr>";
+            $tantsupaar=htmlspecialchars($tantsupaar);
+            echo "<td>".$tantsupaar."</id>";
+            echo "<td>".$punktid."</td>";
+            echo "<td>".$paev."</td>";
+            if(isAdmin()){
+
+            } else {
+                echo "<td><a href='?heatants=$id'>Lisa +1punkt</a></td>";
+                echo "<td><a href='?badtants=$id'>Lisa -1punkt</a></td>";
+            }
+            echo "</tr>";
+        }
+        ?>
+        <?php if(isAdmin()){?>
 
 
-    <form action="?">
-        <label for="paarinimi">Lisa uus paar</label>
-        <input type="text" name="paarinimi" id="paarinimi">
-        <input type="submit" value="Lisa paar">
-    </form>
+            <form action="?">
+                <label for="paarinimi">Lisa uus paar</label>
+                <input type="text" name="paarinimi" id="paarinimi">
+                <input type="submit" value="Lisa paar">
+            </form>
         <?php } ?>
-</table>
-
+    </table>
+<?php } ?>
 </body>
 </html>

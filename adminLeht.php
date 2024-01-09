@@ -1,7 +1,8 @@
 <?php
 require_once ("conf.php");
-// punktide lisamine
 session_start();
+// punktide lisamine
+
 if(isset($_REQUEST["punktid0"])){
     global $yhendus;
     $kask=$yhendus->prepare("UPDATE tantsud SET punktid=0 WHERE id=?");
@@ -36,6 +37,17 @@ if(isset($_REQUEST["naitmine"])){
     <title>Tantsud tahtega</title>
 </head>
 <body>
+<nav>
+    <ul>
+
+        <li>
+            <a href="haldusLeht.php">Kasutaja</a>
+        </li>
+        <li>
+            <a href="adminLeht.php">Admin</a>
+        </li>
+    </ul>
+</nav>
 <header>
     <?php
     if(isset($_SESSION['kasutaja'])){
@@ -60,10 +72,10 @@ if(isset($_REQUEST["naitmine"])){
         <th>Kommentaarid</th>
         <th>Punktid</th>
     </tr>
-<?php
+    <?php
     global $yhendus;
     $kask=$yhendus->prepare("SELECT id, tantsupaar, punktid, ava_paev, kommentaarid, avalik FROM tantsud");
-$kask->bind_result($id, $tantsupaar, $punktid, $paev, $kommentaarid, $avalik);
+    $kask->bind_result($id, $tantsupaar, $punktid, $paev, $kommentaarid, $avalik);
     $kask->execute();
     while($kask->fetch()){
         $tekst="Näita";
@@ -87,7 +99,7 @@ $kask->bind_result($id, $tantsupaar, $punktid, $paev, $kommentaarid, $avalik);
         echo "<td>Peida/Näita</td>";
         echo "</tr>";
     }
-?>
+    ?>
 
 </table>
 
