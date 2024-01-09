@@ -2,7 +2,7 @@
 require_once ("conf.php");
 session_start();
 // punktide lisamine
-if(isset($_REQUEST["paarinimi"]) && !empty($_REQUEST["paarinimi"]) && isAdmin()){
+if(isset($_REQUEST["paarnimi"]) && !empty($_REQUEST["paarinimi"]) && isAdmin()){
     global $yhendus;
     $kask=$yhendus->prepare("INSERT INTO tantsud (tantsupaar, ava_paev) VALUES(?, NOW())");
     $kask->bind_param("s", $_REQUEST["paarinimi"]);
@@ -10,6 +10,18 @@ if(isset($_REQUEST["paarinimi"]) && !empty($_REQUEST["paarinimi"]) && isAdmin())
     header("Location: $_SERVER[PHP_SELF]");
     $yhendus->close();
     //exit()
+}
+if(isset($_REQUEST["komment"])) {
+    if(isset($_REQUEST["uuskomment"]) && !empty($_REQUEST["uuskomment"]) && isAdmin()) {
+    global $yhendus;
+    $kask = $yhendus->prepare("UPDATE tantsud set kommentaarid=CONCAT(kommentaarid, ?) WHERE id=?");
+    $kommentplus=$_REQUEST["uuskomment"]. "\n";
+    $kask->bind_param("si", $kommentplus, $_REQUEST["komment"] );
+    $kask->execute();
+    header("Location: $_SERVER[PHP_SELF]");
+    $yhendus->close();
+    //exit()
+}
 }
 if(isset($_REQUEST["heatants"])){
     global $yhendus;
@@ -91,6 +103,7 @@ function isAdmin(){
             echo "<td>".$punktid."</td>";
             echo "<td>".$paev."</td>";
             echo "<td>".$kommentaarid."</td>";
+
             if(isAdmin()){
 
             } else {
